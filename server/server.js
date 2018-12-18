@@ -14,16 +14,15 @@ app.use(express.static(publicPath));
 // Register an event listener
 io.on('connection', socket => {
   console.log('New user connected');
-  // Sending new email data to client
-  socket.emit('newMessage', {
-    from: 'Mike',
-    text: 'Hello',
-    createdAt: 1234
-  });
 
   // Listen for custom event from client
-  socket.on('createMessage', createMessage => {
-    console.log('Create message', createMessage);
+  socket.on('createMessage', message => {
+    console.log('Create message', message);
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   });
 
   socket.on('disconnect', () => {
